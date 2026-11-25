@@ -1,0 +1,120 @@
+# 开发环境配置
+server:
+  # 服务器的HTTP端口，默认为8080
+  port: 9000
+  servlet:
+    # 应用的访问路径
+    context-path: /
+  tomcat:
+    # tomcat的URI编码
+    uri-encoding: UTF-8
+    # 连接数满后的排队数，默认为100
+    accept-count: 1000
+    threads:
+      # tomcat最大线程数，默认为200
+      max: 800
+      # Tomcat启动初始化的线程数，默认值10
+      min-spare: 100
+
+# 日志配置
+logging:
+  level:
+    com.xhzb: info
+    org.springframework: info
+# 开启spring-ai的简单日志
+    org.springframework.ai: DEBUG
+
+# Spring配置
+spring:
+  ai:
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        options:
+          # 本地实际拥有的对话模型（qwen3.5:9b 只有 manifest、权重缺失，调不动）
+          model: qwen3.5:0.8b
+          temperature: 0.7
+      embedding:
+        options:
+          # 向量模型交给本地 Ollama：DeepSeek 没有 embedding 接口
+          model: qwen3-embedding:0.6b
+
+    openai:
+      # DeepSeek 走 OpenAI 兼容协议，key 取自系统环境变量 DEEPSEEK_API_KEY
+      api-key: ${DEEPSEEK_API_KEY}
+      base-url: https://api.deepseek.com
+      chat:
+        options:
+          model: deepseek-chat
+          temperature: 0.7
+  # 资源信息
+  messages:
+    # 国际化资源文件路径
+    basename: i18n/messages
+  # 文件上传
+  servlet:
+    multipart:
+      # 单个文件大小
+      max-file-size: 10MB
+      # 设置总上传的文件大小
+      max-request-size: 20MB
+  # 服务模块
+  devtools:
+    restart:
+      # 热部署开关
+      enabled: true
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/xhzb?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+    username: ${MYSQL_USERNAME:root}
+    password: ${MYSQL_PASSWORD:}
+  # redis 配置
+  data:
+    redis:
+      # 地址
+      host: ${REDIS_HOST:localhost}
+      # 端口，默认为6379
+      port: ${REDIS_PORT:6379}
+      # 数据库索引
+      database: 0
+      # 密码
+      password: ${REDIS_PASSWORD:}
+      # 连接超时时间
+      timeout: 10s
+      jedis:
+        pool:
+          enabled: true
+# Springdoc配置
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    tags-sorter: alpha
+  group-configs:
+    - group: 'default'
+      display-name: '测试模块'
+      paths-to-match: '/**'
+      packages-to-scan: com.xhzb
+# oss的配置，要根据自己实际情况来进行修改
+oss:
+  endpoint: oss-cn-beijing.aliyuncs.com
+  accessKeyId: ${OSS_ACCESS_KEY_ID:}
+  accessKeySecret: ${OSS_ACCESS_KEY_SECRET:}
+  bucketName: ${OSS_BUCKET_NAME:}
+
+huaweicloud:
+  ak: ${HUAWEI_IOT_AK:}
+  sk: ${HUAWEI_IOT_SK:}
+  #如果是上海一，请填写"cn-east-3"；如果是北京四，请填写"cn-north-4";
+  regionId: ${HUAWEI_IOT_REGION:cn-north-4}
+  endpoint: ${HUAWEI_IOT_ENDPOINT:}
+  projectId: ${HUAWEI_IOT_PROJECT_ID:}
+  #amqp相关配置 第二天课程接收设备数据使用
+  host: ${HUAWEI_IOT_AMQP_HOST:}
+  accessKey: ${HUAWEI_IOT_AMQP_ACCESS_KEY:}
+  accessCode: ${HUAWEI_IOT_AMQP_ACCESS_CODE:}
+  queueName: DefaultQueue   #默认无需改动
+
+

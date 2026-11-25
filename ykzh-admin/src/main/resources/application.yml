@@ -1,0 +1,100 @@
+# 项目相关配置
+ruoyi:
+  # 名称
+  name: RuoYi
+  # 版本
+  version: 3.9.0
+  # 版权年份
+  copyrightYear: 2025
+  # 文件路径 示例（ Windows配置D:/ruoyi/uploadPath，Linux配置 /home/ruoyi/uploadPath）
+  profile: D:/ruoyi/uploadPath
+  # 获取ip地址开关
+  addressEnabled: false
+  # 验证码类型 math 数字计算 char 字符验证
+  captchaType: math
+
+# 激活环境
+# 本地 IDEA 启动默认 dev；容器部署时由 deploy.sh 传入 -e SPRING_PROFILES_ACTIVE=prod
+spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+
+# 用户配置
+user:
+  password:
+    # 密码最大错误次数
+    maxRetryCount: 5
+    # 密码锁定时间（默认10分钟）
+    lockTime: 10
+
+# 微信小程序配置
+wechat:
+  # 小程序 appid
+  appid: ${WECHAT_APPID:}
+  # 小程序 secret
+  secret: ${WECHAT_SECRET:}
+# 小程序端预约配置
+member:
+  reservation:
+    # 每个时段可预约人数
+    capacity: 6
+    # 每日可预约时段（HH:mm），必须与小程序端 TimeSelect 的 timeBaseData 一致（08:00~18:00 每半小时）
+    slots: 08:00,08:30,09:00,09:30,10:00,10:30,11:00,11:30,12:00,12:30,13:00,13:30,14:00,14:30,15:00,15:30,16:00,16:30,17:00,17:30,18:00
+    # 当天取消预约次数上限，超过则不允许再预约
+    cancelled-limit: 3
+    # 最多可提前几天预约，0 表示不限制
+    max-advance-days: 0
+
+# Dify 智能体（Agent）对话配置
+dify:
+  # Dify API 地址（含 /v1）
+  base-url: ${DIFY_BASE_URL:http://localhost/v1}
+  # Dify 应用（Agent）密钥，通过环境变量注入
+  api-key: ${DIFY_API_KEY:}
+  # 连接超时（毫秒）
+  connect-timeout: 10000
+  # 普通接口读取超时（毫秒），流式对话接口不受此限制
+  read-timeout: 600000
+
+# token配置
+token:
+  # 令牌自定义标识
+  header: Authorization
+  # 令牌密钥，生产环境务必通过环境变量覆盖
+  secret: ${TOKEN_SECRET:change-me-in-production}
+  # 令牌有效期（默认30分钟）
+  expireTime: 300000
+# MyBatisPlus配置
+mybatis-plus:
+  # 搜索指定包别名
+  typeAliasesPackage: com.xhzb.**.domain
+  # 配置mapper的扫描，找到所有的mapper.xml映射文件
+  mapperLocations: classpath*:mapper/**/*Mapper.xml
+  # 全局配置
+  global-config:
+    db-config:
+      id-type: auto   #id生成策略为自增
+  configuration:
+    map-underscore-to-camel-case: true    #字段与属性，自动转换为驼峰命名
+
+# PageHelper分页插件
+pagehelper:
+  helperDialect: mysql
+  supportMethodsArguments: true
+  params: count=countSql
+
+# Swagger配置
+swagger:
+  # 是否开启swagger
+  enabled: true
+  # 请求前缀
+  pathMapping: /dev-api
+
+# 防止XSS攻击
+xss:
+  # 过滤开关
+  enabled: true
+  # 排除链接（多个用逗号分隔）
+  excludes: /system/notice
+  # 匹配链接
+  urlPatterns: /system/*,/monitor/*,/tool/*
